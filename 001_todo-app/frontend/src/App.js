@@ -2,19 +2,27 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
+const API_URL = process.env.API_URL || (
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5000'
+    : 'http://jn-space.ddns.net'
+);
+
+console.log('API_URL:', API_URL);
+
 function App() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/todos')
+    axios.get(`${API_URL}/api/todos`)
       .then(response => setTodos(response.data))
       .catch(error => console.error('Error fetching todos:', error.response?.data || error.message));
   }, []);
 
   const handleAddTodo = () => {
     if (newTodo.trim()) {
-      axios.post('http://localhost:5000/todos', { text: newTodo })
+      axios.post(`${API_URL}/api/todos`, { text: newTodo })
         .then(response => {
           setTodos([...todos, response.data]);
           setNewTodo('');
@@ -24,7 +32,7 @@ function App() {
   };
 
   const handleToggleComplete = (id, completed) => {
-    axios.put(`http://localhost:5000/todos/${id}`, { completed: !completed })
+    axios.put(`${API_URL}/api/todos/${id}`, { completed: !completed })
       .then(response => {
         setTodos(todos.map(todo => todo._id === id ? response.data : todo));
       })
@@ -32,7 +40,7 @@ function App() {
   };
 
   const handleDeleteTodo = (id) => {
-    axios.delete(`http://localhost:5000/todos/${id}`)
+    axios.delete(`${API_URL}/api/todos/${id}`)
       .then(() => {
         setTodos(todos.filter(todo => todo._id !== id));
       })

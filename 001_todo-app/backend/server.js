@@ -11,10 +11,10 @@ app.use(express.json());
 app.use(cors()); // Enable CORS for all origins
 
 // Use the todos router for handling /todos routes
-app.use('/todos', todosRouter);
+app.use('/api/todos', todosRouter);
 
 // Routes
-app.get('/todos', async (req, res) => {
+app.get('/api/todos', async (req, res) => {
   try {
     const todos = await Todo.find();
     res.json(todos);
@@ -23,7 +23,7 @@ app.get('/todos', async (req, res) => {
   }
 });
 
-app.post('/todos', async (req, res) => {
+app.post('/api/todos', async (req, res) => {
   const todo = new Todo({
     text: req.body.text,
   });
@@ -36,7 +36,7 @@ app.post('/todos', async (req, res) => {
   }
 });
 
-app.put('/todos/:id', async (req, res) => {
+app.put('/api/todos/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { completed } = req.body;
@@ -56,7 +56,7 @@ app.put('/todos/:id', async (req, res) => {
   }
 });
 
-app.delete('/todos/:id', async (req, res) => {
+app.delete('/api/todos/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const result = await Todo.findByIdAndDelete(id);
